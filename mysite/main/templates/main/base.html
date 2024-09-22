@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}פיצה נדל"ן{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+    <style type="text/css">
+        /* Sidebar */
+        .sidenav {
+            height: 100%;
+            width: 0; /* Start with a width of 0 */
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s; /* Smooth transition for opening/closing */
+            padding-top: 60px; /* Add some top padding */
+        }
+
+        /* Sidebar links */
+        .sidenav a {
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 20px;
+            color: #818181;
+            display: block;
+            transition: 0.3s; /* Smooth transition for hover */
+        }
+
+        /* Hover effects on sidebar links */
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        /* Main content */
+        .main {
+            transition: margin-right 0.5s; /* Smooth transition for margin change */
+            padding: 20px;
+        }
+
+        /* Button to open the sidebar */
+        #sidebarToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #111;
+            z-index: 2;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
+
+        /* Open state for sidebar */
+        .sidenav.open {
+            width: 250px; /* The width of the sidebar when open */
+        }
+
+        /* Adjust the main content margin when sidebar is open */
+        .main.shifted {
+            margin-right: 250px; /* Margin equivalent to sidebar width */
+        }
+        /* Buttons */
+        .btn-custom {
+            background-color: #FF6347; /* צבע אדום-כתום */
+            border: none;
+            color: #fff;
+            padding: 12px 30px;
+            font-weight: bold;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .btn-custom:hover {
+            background-color: #FF4500; /* צבע כתום כהה יותר */
+            transform: translateY(-8px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-custom:active {
+            transform: scale(0.95);
+        }
+
+        .btn-custom:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 69, 0, 0.5);
+        }
+
+        /* Improved accessibility */
+        .text-large {
+            font-size: 1.25rem; /* גודל טקסט גדול יותר */
+        }
+
+        .highlight {
+            background-color: #f0f0f0; /* רקע אפור בהיר להדגשה */
+            padding: 10px;
+            border-radius: 10px;
+        }
+    
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <!-- Button to open/close sidebar -->
+    <button id="sidebarToggle">&#9776;</button>
+
+    <!-- Sidebar -->
+    <div id="mySidenav" class="sidenav">
+        <a href="/home">Home</a>
+        <a href="/add_property">הוסף נכס</a>
+    </div>
+
+<div class="main" id="mainContent">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <img src="{% static 'images/logo.png' %}" alt="פיצה נדל"ן לוגו" height="30">
+                    פיצה נדל"ן
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'home' %}">דף הבית</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'property_list' %}">נכסים</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'investments' %}">ההשקעות שלי</a>
+                            </li>
+                            <!-- Use a form for logout -->
+                            <li class="nav-item">
+                                <form method="POST" action="{% url 'logout' %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link nav-link" style="padding: 0;">התנתק</button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">התחבר</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'register' %}">הרשמה</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mt-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+       
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+        <footer class="bg-dark text-white text-center text-lg-start mt-4">
+            <div class="container p-4">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">פיצה נדל"ן</h5>
+                        <p>השקעה בנדל"ן בקלות כמו הזמנת פיצה!</p>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">קישורים</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="#!" class="text-secondary">אודות</a></li>
+                            <li><a href="#!" class="text-secondary">תנאי שימוש</a></li>
+                            <li><a href="#!" class="text-secondary">מדיניות פרטיות</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">צור קשר</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#!" class="text-secondary">צור קשר</a></li>
+                            <li><a href="#!" class="text-secondary">שאלות נפוצות</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center p-3 bg-primary text-white">
+                © 2024 פיצה נדל"ן. כל הזכויות שמורות.
+            </div>
+        </footer>
+    </div> <!-- End of main content -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        // JavaScript to handle the sidebar toggle
+        document.getElementById('sidebarToggle').onclick = function () {
+            var sidenav = document.getElementById('mySidenav');
+            var mainContent = document.getElementById('mainContent');
+            // Toggle the sidebar open/close state
+            sidenav.classList.toggle('open');
+            mainContent.classList.toggle('shifted');
+        };
+    </script>
+    {% block extra_js %}{% endblock %}
+     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

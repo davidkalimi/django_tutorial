@@ -1,0 +1,18 @@
+{% extends 'main/base.html' %}
+{% block title %}View List{% endblock %}
+
+{% block content %}
+	<h1>{{pr.title}}</h1>
+	
+	<ul>
+		{% for property in pr.item_set.all %}
+			{% if property.complete==Flase %}
+				<li>{{property.title}} - COMPLETE</li>
+			{% else %}
+				<li>{{property.title}} - INCOMPLETE</li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+
+	
+{% endblock %}

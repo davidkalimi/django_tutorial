@@ -1,0 +1,183 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}ההשקעות שלי - פיצה נדל"ן{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* כפתורים לסינון */
+    .filter-buttons {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+
+    .filter-btn {
+        background-color: var(--turquoise);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        font-weight: bold;
+        border-radius: 50px;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover {
+        background-color: var(--dark-blue);
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* טבלה של ההשקעות */
+    .investment-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2rem;
+    }
+
+    .investment-table th, .investment-table td {
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .investment-table th {
+        background-color: var(--dark-blue);
+        color: white;
+    }
+
+    .investment-table td {
+        background-color: white;
+    }
+
+    .investment-table tr:hover {
+        background-color: var(--light-grey);
+    }
+
+    .highlight-row {
+        background-color: var(--turquoise);
+        color: white;
+        font-weight: bold;
+    }
+
+    /* סגנון מיוחד לחישובים ולתשואות */
+    .return-percentage {
+        color: var(--orange);
+        font-weight: bold;
+    }
+
+    /* פיצ'רים של השקעה */
+    .investment-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .investment-image img {
+        width: 100px;
+        height: 100px;
+        border-radius: 12px;
+        object-fit: cover;
+        margin-right: 1.5rem;
+    }
+
+    .investment-info {
+        flex: 1;
+    }
+
+    .investment-cta {
+        text-align: right;
+    }
+
+    .investment-cta a {
+        background-color: var(--orange);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .investment-cta a:hover {
+        background-color: var(--dark-blue);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center section-title">ההשקעות שלי</h1>
+
+    <!-- כפתורי סינון -->
+    <div class="filter-buttons">
+        <button class="filter-btn">הצג הכל</button>
+        <button class="filter-btn">השקעות פעילות</button>
+        <button class="filter-btn">השקעות שהסתיימו</button>
+        <button class="filter-btn">מיון לפי תשואה</button>
+        <button class="filter-btn">מיון לפי סכום</button>
+    </div>
+
+    <!-- טבלה של השקעות -->
+    <table class="investment-table">
+        <thead>
+            <tr>
+                <th>נכס</th>
+                <th>אחוז השקעה</th>
+                <th>סכום השקעה (₪)</th>
+                <th>תשואה שנתית ממוצעת</th>
+                <th>סטטוס</th>
+                <th>פרטים</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for investment in investments %}
+            <tr class="{% if investment.is_active %}highlight-row{% endif %}">
+                <td>{{ investment.property.title }}</td>
+                <td>{{ investment.percentage }}%</td>
+                <td>{{ investment.amount }} ₪</td>
+                <td class="return-percentage">{{ investment.property.average_annual_return }}%</td>
+                <td>{{ investment.is_active|yesno:"פעילה,הסתיימה" }}</td>
+                <td><a href="{% url 'property_detail' investment.property.id %}" class="btn btn-primary">צפה בנכס</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">אין לך השקעות כרגע.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- השקעות לפי נכס (עיצוב מתקדם יותר) -->
+    <div class="row">
+        {% for investment in investments %}
+        <div class="col-md-6 mb-4">
+            <div class="investment-details">
+                <div class="investment-image">
+                    <img src="{{ investment.property.image.url }}" alt="{{ investment.property.title }}">
+                </div>
+                <div class="investment-info">
+                    <h5>{{ investment.property.title }}</h5>
+                    <p>אחוז השקעה: {{ investment.percentage }}%</p>
+                    <p>תשואה שנתית ממוצעת: {{ investment.property.average_annual_return }}%</p>
+                </div>
+                <div class="investment-cta">
+                    <a href="{% url 'property_detail' investment.property.id %}">פרטים נוספים</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">אין לך השקעות כרגע.</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

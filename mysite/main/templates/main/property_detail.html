@@ -1,0 +1,192 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}{{ property.title }} - פיצה נדל"ן{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+<style>
+    :root {
+        --primary-color: #ff5a5f;
+        --secondary-color: #484848;
+        --light-gray: #f7f7f7;
+    }
+
+    .property-header {
+        background-color: var(--light-gray);
+        padding: 2rem 0;
+        text-align: center;
+    }
+
+    .property-title {
+        font-size: 2.5rem;
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+
+    .property-price {
+        font-size: 2rem;
+        color: var(--primary-color);
+    }
+
+    .property-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .detail-item {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .detail-item i {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .detail-item h6 {
+        font-size: 1.1rem;
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-item p {
+        font-size: 1.25rem;
+        color: #333;
+    }
+
+    .gallery {
+    margin-bottom: 2rem;
+    }
+
+    .gallery-slider {
+        max-width: 800px; 
+        height: 400px;
+    }
+
+    .gallery img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .property-description {
+        margin-bottom: 2rem;
+    }
+
+    .btn-invest {
+        display: block;
+        background-color: var(--primary-color);
+        color: white;
+        text-align: center;
+        padding: 1rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 1.25rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-invest:hover {
+        background-color: #e04f5f;
+    }
+
+    .similar-properties {
+        margin-top: 4rem;
+    }
+
+    .similar-properties h2 {
+        font-size: 2rem;
+        color: var(--secondary-color);
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .property-details {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="property-header">
+    <h1 class="property-title">{{ property.title }}</h1>
+    <p class="property-price">{{ property.price }} ₪</p>
+</div>
+
+<div class="container">
+    <div class="gallery">
+        <div class="gallery-slider">
+            <img src="{{ property.image.url }}" alt="{{ property.title }}">
+            <img src="{% static 'images/sample1.jpg' %}" alt="Gallery Image 1">
+            <img src="{% static 'images/sample2.jpg' %}" alt="Gallery Image 2">
+            <img src="{% static 'images/sample3.jpg' %}" alt="Gallery Image 3">
+        </div>
+    </div>
+
+    <div class="property-details">
+        <div class="detail-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <h6>מיקום</h6>
+            <p>{{ property.location }}</p>
+        </div>
+        <div class="detail-item">
+            <i class="fas fa-bed"></i>
+            <h6>מספר חדרים</h6>
+            <p>{{ property.num_rooms }}</p>
+        </div>
+        <div class="detail-item">
+            <i class="fas fa-ruler-combined"></i>
+            <h6>גודל במ"ר</h6>
+            <p>{{ property.square_meters }}</p>
+        </div>
+        <div class="detail-item">
+            <i class="fas fa-percent"></i>
+            <h6>תשואה ממוצעת</h6>
+            <p>{{ property.average_annual_return }}%</p>
+        </div>
+        <div class="detail-item">
+            <i class="fas fa-shekel-sign"></i>
+            <h6>שכר דירה ממוצע</h6>
+            <p>{{ property.average_rent }} ₪</p>
+        </div>
+    </div>
+
+    <div class="property-description">
+        <p>{{ property.description }}</p>
+    </div>
+
+    <a href="#" class="btn-invest">השקע עכשיו</a>
+
+    <div class="similar-properties">
+        <h2>נכסים דומים</h2>
+        <!-- Add similar properties here -->
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script>
+    $(document).ready(function(){
+      $('.gallery-slider').slick({
+        dots: true,
+        arrows: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        adaptiveHeight: true
+      });
+    });
+</script>
+{% endblock %}
